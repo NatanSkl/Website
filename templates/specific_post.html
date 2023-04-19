@@ -1,0 +1,264 @@
+{% extends "template.html" %}
+{% block head %}
+	{{ super() }}
+	<link href="{{ url_for('static', filename='css/votes.css')}}" rel="stylesheet">
+	{% if session["username"] %}
+		<script src="{{ url_for('static', filename='js/votes.js')}}"></script>
+	{% endif %}
+	{% if not session["username"] %}
+		<script src="{{ url_for('static', filename='js/vote-not-logged-in.js')}}"></script>
+	{% endif %}
+{% endblock %}
+{% block content %}
+	<div class="jumbotron">
+		<div class="row">
+			<div class="col-md-10 col-xs-12 col-md-offset-1 col-xs-offset-0">
+				<div class="panel panel-primary">
+					<div class="panel-body">
+						<div class="row" identifier="{{ post[4] }}">
+							<div class="col-md-1 col-xs-1 parent">
+								<div class="child text-center">
+									<div>
+										<span class="glyphicon glyphicon-arrow-up vote big-vote {% if post[6] > 0 %}upvoted{% endif %}"></span>
+										<span class="glyphicon glyphicon-arrow-down vote big-vote {% if post[6] < 0 %}downvoted{% endif %}"></span>
+									</div>
+									<span class="votes">{{ post[5] }}</span>
+								</div>
+							</div>
+							<div class="col-md-11 col-xs-11">
+								<h2>{{ post[0] }}</h2>
+								<span>Created on {{ post[2] }} by <strong>{{ post[3] }}</strong></span>
+								<p>{{ post[1] }}</p>
+								{% if session["username"] %}
+									<ul class="list-inline">
+										<li><button class="btn btn-default btn-xs reply-button" for="{{ post[4] }}">Reply</button></li>
+										{% if post[3] == session["username"] or session["permission_id"] == 2 %}
+											<li><button class="btn btn-default btn-xs edit-button" for="{{ post[4] }}">Edit</button></li>
+											<li><button class="btn btn-default btn-xs delete-button" for="{{ post[4] }}">Delete</button>
+										{% endif %}
+									</ul>
+								{% endif %}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		{% if session["username"] %}
+			<div class="row hide reply-form" for="{{ post[4] }}" style="margin-bottom: 20px">
+				<div class="col-md-11 col-md-offset-1 col-xs-12 col-xs-offset-0" style="padding-left: 0;">
+					<form method="POST" action="">
+						<div class="form-group">
+							<div class="row">
+								<div class="col-xs-12 col-md-4">
+									<button type="button" class="btn btn-default btn-xs pull-right reply-close" for="{{ post[4] }}"><span class="glyphicon glyphicon-remove pull-right"></span></button>
+									<label for="{{ post[4] }}reply">Reply:</label>
+									<textarea id="{{ post[4] }}reply" class="form-control" name="reply" maxlength="1000" rows="2" required></textarea>
+								</div>
+							</div>
+						</div>
+						<input type="hidden" name="identifier" value="{{ post[4] }}">
+						<div class="row">
+							<div class="col-xs-12 col-md-4">
+								<div class="text-center">
+									<button type="submit" class="btn btn-primary text-center">Reply</button>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+			<div class="row hide edit-form" for="{{ post[4] }}" style="margin-bottom: 20px">
+				<div class="col-md-11 col-md-offset-1 col-xs-12 col-xs-offset-0" style="padding-left: 0;">
+					<form method="POST" action="/forums/{{ post[4] }}/edit">
+						<div class="form-group">
+							<div class="row">
+								<div class="col-xs-12 col-md-4">
+									<button type="button" class="btn btn-default btn-xs pull-right edit-close" for="{{ post[4] }}"><span class="glyphicon glyphicon-remove pull-right"></span></button>
+									<label for="{{ post[4] }}edit">Edit:</label>
+									<textarea id="{{ post[4] }}edit" class="form-control" name="content" maxlength="1000" rows="2" required></textarea>
+								</div>
+							</div>
+						</div>
+						<input type="hidden" name="identifier" value="{{ post[4] }}">
+						<div class="row">
+							<div class="col-xs-12 col-md-4">
+								<div class="text-center">
+									<button type="submit" class="btn btn-primary text-center">Edit</button>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		{% endif %}
+		<div class="row">
+			<div class="col-md-10 col-xs-12 col-md-offset-1 col-xs-offset-0">
+				<h2 class="display-3">Replies:</h2>
+			</div>
+		</div>
+		{% for reply in replies %}
+			<div class="row">
+				<div class="col-md-10 col-xs-12 col-md-offset-1 col-xs-offset-0">
+					<div class="panel">
+						<div class="panel-body">
+							<div class="row" identifier="{{ reply[3] }}">
+								<div class="col-md-1 col-xs-1 parent">
+									<div class="child text-center">
+										<div>
+											<span class="glyphicon glyphicon-arrow-up vote small-vote {% if reply[5] > 0 %} upvoted {% endif %}"></span>
+											<span class="glyphicon glyphicon-arrow-down vote small-vote {% if reply[5] < 0 %} downvoted {% endif %}"></span>
+										</div>
+										<span class="votes">{{ reply[4] }}</span>
+									</div>
+								</div>
+								<div class="col-md-11 col-xs-11">
+									<span><strong>{{ reply[2] }}</strong> at {{ reply[1] }}</span>
+									<p>{{ reply[0] }}</p>
+									{% if session["username"] %}
+										<ul class="list-inline">
+											<li><button class="btn btn-default btn-xs reply-button" for="{{ reply[3] }}">Reply</button></li>
+											{% if post[3] == session["username"] or session["permission_id"] == 2 %}
+												<li><button class="btn btn-default btn-xs edit-button" for="{{ reply[3] }}">Edit</button></li>
+												<li><button class="btn btn-default btn-xs delete-button" for="{{ reply[3] }}">Delete</button></li>
+											{% endif %}
+										</ul>
+									{% endif %}
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			{% for child in reply[7] %}
+				<div class="row">
+					<div class="col-md-9 col-xs-12 col-md-offset-2 col-xs-offset-0">
+						<div class="panel">
+							<div class="panel-body">
+								<div class="row" identifier="{{ child[3] }}">
+									<div class="col-md-1 col-xs-1 parent">
+										<div class="child text-center">
+											<div>
+												<span class="glyphicon glyphicon-arrow-up vote small-vote {% if child[5] > 0 %} upvoted {% endif %}"></span>
+												<span class="glyphicon glyphicon-arrow-down vote small-vote {% if child[5] < 0 %} downvoted {% endif %}"></span>
+											</div>
+											<span class="votes">{{ child[4] }}</span>
+										</div>
+									</div>
+									<div class="col-md-11 col-xs-11">
+										<span><strong>{{ child[2] }}</strong> at {{ child[1] }}</span>
+										<p>{{ child[0] }}</p>
+										{% if session["username"] %}
+											<ul class="list-inline">
+												{% if child[2] == session["username"] or session["permission_id"] == 2 %}
+													<li><button class="btn btn-default btn-xs edit-button" for="{{ child[3] }}">Edit</button></li>
+													<li><button class="btn btn-default btn-xs delete-button" for="{{ child[3] }}">Delete</button></li>
+												{% endif %}
+											</ul>
+										{% endif %}
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row hide edit-form" for="{{ child[3] }}" style="margin-bottom: 20px">
+					<div class="col-md-9 col-md-offset-3 col-xs-12 col-xs-offset-0" style="padding-left: 0;">
+						<form method="POST" action="/forums/{{ child[3] }}/edit">
+							<div class="form-group">
+								<div class="row">
+									<div class="col-xs-12 col-md-4">
+										<button type="button" class="btn btn-default btn-xs pull-right edit-close" for="{{ child[3] }}"><span class="glyphicon glyphicon-remove pull-right"></span></button>
+										<label for="{{ child[3] }}edit">Edit:</label>
+										<textarea id="{{ child[3] }}edit" class="form-control" name="content" maxlength="1000" rows="2" required></textarea>
+									</div>
+								</div>
+							</div>
+							<input type="hidden" name="identifier" value="{{ child[3] }}">
+							<div class="row">
+								<div class="col-xs-12 col-md-4">
+									<div class="text-center">
+										<button type="submit" class="btn btn-primary text-center">Edit</button>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			{% endfor %}
+			<div class="row hide reply-form" for="{{ reply[3] }}" style="margin-bottom: 20px">
+				<div class="col-md-11 col-md-offset-2 col-xs-12 col-xs-offset-0" style="padding-left: 0;">
+					<form method="POST" action="">
+						<div class="form-group">
+							<div class="row">
+								<div class="col-xs-12 col-md-4">
+									<button type="button" class="btn btn-default btn-xs pull-right reply-close" for="{{ reply[3] }}"><span class="glyphicon glyphicon-remove pull-right"></span></button>
+									<label for="{{ reply[3] }}reply">Reply:</label>
+									<textarea id="{{ reply[3] }}reply" class="form-control" name="reply" maxlength="1000" rows="2" required></textarea>
+								</div>
+							</div>
+						</div>
+						<input type="hidden" name="identifier" value="{{ reply[3] }}">
+						<div class="row">
+							<div class="col-xs-12 col-md-4">
+								<div class="text-center">
+									<button type="submit" class="btn btn-primary text-center">Reply</button>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+			<div class="row hide edit-form" for="{{ reply[3] }}" style="margin-bottom: 20px">
+				<div class="col-md-11 col-md-offset-2 col-xs-12 col-xs-offset-0" style="padding-left: 0;">
+					<form method="POST" action="/forums/{{ reply[3] }}/edit">
+						<div class="form-group">
+							<div class="row">
+								<div class="col-xs-12 col-md-4">
+									<button type="button" class="btn btn-default btn-xs pull-right edit-close" for="{{ reply[3] }}"><span class="glyphicon glyphicon-remove pull-right"></span></button>
+									<label for="{{ reply[3] }}edit">Edit:</label>
+									<textarea id="{{ reply[3] }}edit" class="form-control" name="content" maxlength="1000" rows="2" required></textarea>
+								</div>
+							</div>
+						</div>
+						<input type="hidden" name="identifier" value="{{ reply[3] }}">
+						<div class="row">
+							<div class="col-xs-12 col-md-4">
+								<div class="text-center">
+									<button type="submit" class="btn btn-primary text-center">Edit</button>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		{% endfor %}
+	</div>
+	<script>
+		$(".delete-button").click(function() {
+			if(confirm("Are you sure you want to delete?")) {
+				var identifier = $(this).attr("for")
+				var url = document.URL, shortUrl=url.substring(0, url.lastIndexOf("/"))
+				$.post("/forums/" + identifier + "/delete", {}, function(data, status) {
+					$(location).attr("href", url.includes(identifier) ? shortUrl : url)
+				})
+			}
+		})
+		$(".reply-button").click(function() {
+			identifier = $(this).attr("for")
+			$("div.reply-form[for=" + identifier + "]").toggleClass("hide")
+		})
+		$(".reply-close").click(function() {
+			identifier = $(this).attr("for")
+			$("div.reply-form[for=" + identifier + "]").addClass("hide")
+		})
+		$(".edit-button").click(function() {
+			identifier = $(this).attr("for")
+			$("div.edit-form[for=" + identifier + "]").toggleClass("hide")
+		})
+		$(".edit-close").click(function() {
+			identifier = $(this).attr("for")
+			$("div.edit-form[for=" + identifier + "]").addClass("hide")
+		})
+	</script>
+{% endblock %}

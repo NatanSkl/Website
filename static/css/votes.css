@@ -1,0 +1,35 @@
+.vote {
+	color: slategray;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none; 
+}
+.big-vote {
+    font-size: 2em;
+}
+.small-vote {
+    font-size: 1.5em;
+}
+.vote:hover {
+	cursor: pointer;
+}
+.upvoted {
+	color: darkorange;
+}
+.downvoted {
+	color: #0079d3;
+}
+.votes {
+	color: slategray;
+	font-size: 125%;
+}
+.child {
+	padding-top: 25%;
+}
+.row {
+	margin-left: 0 !important;
+	margin-right: 0 !important;
+}

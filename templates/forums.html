@@ -1,0 +1,58 @@
+{% extends "template.html" %}
+{% block head %}
+	{{ super() }}
+	
+{% endblock %}
+{% block content %}
+	<div class="jumbotron">
+		<div class="container">
+			<h1 class="display-3 text-center">Forum Categories</h1>
+			{% for row in list %}
+				<div class="panel panel-primary">
+					<div class="panel-body">
+						<h2><a href="/forums/category/{{ row[0] }}">{{ row[0] }}</a></h2>
+						<p>{{ row[1] }}</p>
+					</div>
+				</div>
+			{% endfor %}
+			{% if session["username"] %}
+				<div class="row">
+					<div class="col-xs-12 col-md-4">
+						<div class="text-center">
+							<h2 class="display-3">Create a New Category:</h2>
+						</div>
+					</div>
+				</div>
+				<form method="POST" action="">
+					<div class="form-group">
+						<div class="row">
+							<div class="col-xs-12 col-md-4">
+								<label for="category">New Category:</label>
+								<input id="category" class="form-control" name="category" type="text" maxlength="45" required>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="row">
+							<div class="col-xs-12 col-md-4">
+								<label for="desc">Description:</label>
+								<textarea id="desc" class="form-control" name="desc" maxlength="255" rows="3" required></textarea>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-12 col-md-4">
+							<div class="text-center">
+								<button type="submit" class="btn btn-primary text-center">Create</button>
+							</div>
+						</div>
+					</div>
+				</form>
+			{% endif %}
+			{% if categoryError %}
+				<p class="text-danger text-center">Error: That category already exists</p>
+			{% endif %}
+		</div>
+	</div>
+{% endblock %}
+<!-- Make it so you can click to load more categories -->

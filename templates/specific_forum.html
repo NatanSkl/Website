@@ -1,0 +1,97 @@
+{% extends "template.html" %}
+{% block head %}
+	{{ super() }}
+	<style>
+		/*.jumbotron {
+			background-image: url(http://cdn.grid.fotosearch.com/CSP/CSP992/k12985108.jpg);
+			background-repeat: repeat;
+		}*/
+	</style>
+	<link href="{{ url_for('static', filename='css/votes.css')}}" rel="stylesheet">
+	{% if session["username"] %}
+		<script src="{{ url_for('static', filename='js/votes.js')}}"></script>
+	{% endif %}
+	{% if not session["username"] %}
+		<script src="{{ url_for('static', filename='js/vote-not-logged-in.js')}}"></script>
+	{% endif %}
+{% endblock %}
+{% block content %}
+	<div class="jumbotron">
+		{% for row in data %}
+			<div class="row post">
+				<div class="col-md-10 col-xs-12 col-md-offset-1 col-xs-offset-0">
+					<div class="panel panel-primary">
+						<div class="panel-body">
+							<div class="row" identifier="{{ row[4] }}">
+								<div class="col-md-1 col-xs-1 parent">
+									<div class="child text-center">
+										<div>
+											<span class="glyphicon glyphicon-arrow-up vote big-vote {% if row[6] > 0 %} upvoted {% endif %}"></span>
+											<span class="glyphicon glyphicon-arrow-down vote big-vote {% if row[6] < 0 %} downvoted {% endif %}"></span>
+										</div>
+										<span class="votes">{{ row[5]}}</span>
+									</div>
+								</div>
+								<div class="col-md-11 col-xs-11">
+									<h2><a class="header" href="{{ row[4] }}">{{ row[0] }}</a></h2>
+									<span>Created on {{ row[2] }} by <strong>{{ row[3] }}</strong></span>
+									<p>{{ row[1] }}</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		{% endfor %}
+		{% if postError %}
+			<div class="container">
+				<div class="alert alert-warning text-center lead">
+					<strong>There are no posts in this category.</strong> Create the first one yourself!
+				</div>
+			</div>
+		{% endif %}
+		{% if categoryError %}
+			<div class="container">
+				<div class="alert alert-danger text-center lead">
+					<strong>Error:</strong> This category doesn't exist.
+				</div>
+			</div>
+		{% endif %}
+		{% if session["username"] and not categoryError %}
+			<div class="row">
+				<div class="col-md-11 col-md-offset-1 col-xs-12 col-xs-offset-0">
+					<h2 class="display-3">New Post:</h2>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-11 col-md-offset-1 col-xs-12 col-xs-offset-0" style="padding-left: 0;">
+					<form method="POST" action="">
+						<div class="form-group">
+							<div class="row">
+								<div class="col-xs-12 col-md-4">
+									<label for="title">Title:</label>
+									<input id="title" class="form-control" name="title" type="text" maxlength="100" required>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="row">
+								<div class="col-xs-12 col-md-4">
+									<label for="content">Post:</label>
+									<textarea id="content" class="form-control" name="content" maxlength="2000" rows="8" required></textarea>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-12 col-md-4">
+								<div class="text-center">
+									<button type="submit" class="btn btn-primary text-center">Post</button>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		{% endif %}
+	</div>
+{% endblock %}

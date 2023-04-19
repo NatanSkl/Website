@@ -1,0 +1,61 @@
+{% extends "template.html" %}
+{% block head %}
+	{{ super() }}
+	<style>
+			img {
+				width: 60%;
+				box-shadow: 2px 2px 1px #888888;
+				margin-bottom: 10px;
+			}
+			.jumbotron:last-of-type {
+				margin-bottom: 0;
+			}
+			.row {
+				width: 100%;
+				margin-left: 0.01% !important;
+			}
+			@media (min-width: 600px) and (max-width: 1000px) { 
+				img {
+					width: 40%;
+				}
+			}
+	</style>
+{% endblock %}
+{% block content %}
+	{% for row in data %}
+		<div class="jumbotron">
+			<h1 class="text-center">{{row[1]}}</h1>
+			<div class="row text-center">
+				<div class="col-md-4 text-center">
+					{% if row[0] % 2 == 0 %}
+						<img class="center-block img-rounded" src="{{ url_for('static', filename='images/' + row[1] + '.png') }}">
+					{% else %}
+						<a class="btn btn-primary btn-lg" href="https://github.com/GregSkl/{{ row[1] }}/releases/download/1.0/{{ row[1]}}.jar" role="button">Download {{ row[1] }}</a>
+						<br>
+						<br>
+						<a class="btn btn-success btn-lg" href="https://github.com/GregSkl/{{ row[1] }}" target="_blank" role="button">View {{ row[1] }} on github</a>
+						<br>
+						<br>
+						<h2><a href="/contact" style="text-decoration:none;color:#3399FF">Contact me</a> to tell me what you think about {{ row[1] }}</h2>
+					{% endif %}
+				</div>
+				<div class="col-md-4 text-center">
+					<p class="text-center">{{row[2]}}</p>
+				</div>
+				<div class="col-md-4 text-center">
+					{% if row[0] % 2 == 1 %}
+						<img class="center-block img-rounded" src="{{ url_for('static', filename='images/' + row[1] + '.png') }}">
+					{% else %}
+						<a class="btn btn-primary btn-lg" href="https://github.com/GregSkl/{{ row[1] }}/releases/download/1.0/{{ row[1]}}.jar" role="button">Download {{ row[1] }}</a>
+						<br>
+						<br>
+						<a class="btn btn-success btn-lg" href="https://github.com/GregSkl/{{ row[1] }}" target="_blank" role="button">View {{ row[1] }} on github</a>
+						<br>
+						<br>
+						<h2><a href="/contact" style="text-decoration:none;color:#3399FF">Contact me</a> to tell me what you think about {{ row[1] }}</h2>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+	{% endfor %}
+{% endblock %}

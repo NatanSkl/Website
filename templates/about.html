@@ -1,0 +1,39 @@
+{% extends "template.html" %}
+{% block content %}
+	<div class="jumbotron">
+		<div class="container">
+			<h1 class="display-3 text-center">About Me</h1>
+			<h2 class="text-center">Hi, my name is Greg and I'm from Israel</h2>
+			<p class="text-center">
+			I started programming at the age of 13.
+			A friend got me started, and since then I've been learning from other people's code and tutorials.
+			That's also a reason for why I like sharing my code with everyone, which is exactly what this website is for.<br>
+			You can view my projects here, or download the executable and run them yourself.
+			You can also contact me <a href="/contact" style="text-decoration:none;color:#3399FF">here</a> to leave feedback on the projects, website, and other things.
+			New ideas and improvements are always welcome :)
+			</p>
+		</div>
+	</div>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-4">
+				<div class="text-center">
+					<h2>Follow me on twitter</h2>
+					<a href="https://twitter.com/gregskl" class="btn btn-info" target="_blank" role="button">My Twitter</a>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="text-center">
+					<h2>View my projects on github</h2>
+					<a href="https://github.com/gregskl" class="btn btn-success" target="_blank" role="button">My Github</a>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="text-center">
+					<h2>View my projects here</h2>
+					<a href="/projects" class="btn btn-primary" role="button">My Projects</a>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+	{% block head %}
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>GregSkl</title>
+		<link href="{{ url_for('static', filename='css/bootstrap.css')}}" rel="stylesheet">
+		<link rel="icon" href="{{ url_for('static', filename='images/favicon.ico')}}" sizes="32x32">
+		<script src="{{ url_for('static', filename='js/jquery.js')}}"></script>
+		<script src="{{ url_for('static', filename='js/bootstrap.js')}}"></script>
+		<style>
+			.navbar {
+				margin-bottom: 0;
+				border-radius: 0 !important;
+			}
+		</style>
+	{% endblock %}
+  </head>
+  <body>
+	<nav class="navbar navbar-inverse">
+		<div class="container">
+			<div class="navbar-header">
+				<button class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span> 
+				</button>
+				<a class="navbar-brand" href="/">GregSkl</a>
+			</div>
+			<div class="collapse navbar-collapse" id="navbar">
+				<ul class="nav navbar-nav">
+					<li><a href="/"><span class="glyphicon glyphicon-home"></span> About</a></li>
+					<li><a href="/projects"><span class="glyphicon glyphicon-education"></span> Projects</a></li>
+					<li><a href="/contact"><span class="glyphicon glyphicon-envelope"></span> Contact</a></li>
+					<li><a href="/forums"><span class="glyphicon glyphicon-align-left"></span> Forums</a></li>
+					<!--<li class="dropdown">
+						<a class="dropdown-toggle" data-toggle="dropdown" href="#"><span class="glyphicon glyphicon-th-list"></span> More
+						<span class="caret"></span></a>
+						<ul class="dropdown-menu">
+						  <!--<li><a href="/gameoflife">Game of Life</a></li>--
+						  <li><a href="/forums">Forums</a></li>
+						</ul>
+					</li>-->
+				</ul>
+				<ul class="nav navbar-nav navbar-right">
+					{% if session["username"] %}
+						<li class="dropdown">
+							<a class="dropdown-toggle" data-toggle="dropdown" href="#"><span class="glyphicon glyphicon-cog"></span> {{ session["username"] }}
+							<span class="caret"></span></a>
+							<ul class="dropdown-menu">
+							  <li><a href="/logout">Log out</a></li>
+							</ul>
+						</li>
+					{% else %}
+							<li><a href="/signup"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+							<li><a href="/login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+					{% endif %}
+				</ul>
+			</div>
+		</div>
+	</nav>
+	<script>
+		$(function() {
+			$(".navbar-nav").children().each(function() {
+				path = location.pathname.split("/")[1].toLowerCase()
+				if(path == "")
+					path = "about";
+				if(path == "signup")
+					path = "sign up"
+				if(path == $(this).text().toLowerCase().substring(1))
+					$(this).addClass("active");
+			});
+		})
+	</script>
+	{% block content %}{% endblock %}
+	{% block footer %}
+		<hr>
+		<footer>
+			<p class="text-center">&copy; GregSkl {{ now.year }}</p>
+		</footer>
+	{% endblock %}
+  </body>
+</html>

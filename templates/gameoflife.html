@@ -1,0 +1,152 @@
+{% extends "template.html" %}
+{% block head %}
+	{{ super() }}
+	<style>
+		table {
+			margin-left:auto; 
+			margin-right:auto;
+		}
+		td {
+			height: 15px;
+			width: 15px;
+			border: 1px solid black;
+		}
+		td:hover {
+			cursor: auto;
+		}
+		.white {
+			background-color: white;
+		}
+		.black {
+			background-color: black;
+		}
+	</style>
+	<script>
+		size = 50
+		erase = false;
+		$(function() {
+			table = $("table")
+			for(i = 0; i < size; i++) {
+				tr = $("<tr></tr>")
+				for(j = 0; j < size; j++) {
+					tr.append("<td class=\"white\"")
+				}
+				table.append(tr)
+			}
+			$("td").mousedown(function() {
+				var b = $("#marker").text() == "Eraser"
+				$(this).removeClass(b ? "black" : "white").addClass(b ? "white" : "black")
+				$("td").hover(function() {
+					$(this).removeClass(b ? "black" : "white").addClass(b ? "white" : "black")
+				})
+			})
+			$(document).mouseup(function() {
+				$("td").unbind("mouseenter mouseleave")
+			})
+		});
+		
+		function start() {
+			var board = loadBoard()
+			var copy = board.slice(0);
+			board = updateBoard(board, copy)
+			drawBoard(board)
+		}
+		
+		function loadBoard() {
+			var board = [];
+			$("tr").each(function(i) {
+				board[i] = []
+				$(this).children().each(function(j) {
+					board[i][j] = ($(this).hasClass("black") ? 1 : 0)
+				})
+			})
+			return board;
+		}
+		
+		function updateBoard(board, copy) {
+			console.log(board)
+			for(i = 1; i < size - 1; i++) {
+				for(j = 1; j < size - 1; j++) {
+					var total = 0;
+					var center = board[i][j]
+					total += board[i - 1][j - 1] //top left
+					total += board[i - 1][j] //top
+					total += board[i - 1][j + 1]//top right
+					total += board[i][j - 1] //left
+					total += board[i][j + 1] //right
+					total += board[i + 1][j - 1] //bottom left
+					total += board[i + 1][j] //bottom
+					total += board[i + 1][j + 1] //bottom right
+					console.log(total)
+					/*switch(total) {
+						case 2:
+							copy[i][j] = center;
+							break;
+						case 3:
+							copy[i][j] = 1
+							break;
+						default:
+							copy[i][j] = 0
+					}*/
+					if(center == 0) {
+						switch(total) {
+							case 3:
+								copy[i][j] = 1
+								break;
+							default:
+								copy[i][j] = 0
+						}
+					}
+					else if(center == 1) {
+						switch(total) {
+							case 0:
+							case 1:
+								copy[i][j] = 0;
+								break;
+							case 2:
+							case 3:
+								copy[i][j] = 1;
+								break;
+							case 4:
+							case 5:
+							case 6:
+							case 7:
+							case 8:
+								copy[i][j] = 0
+								break;
+							default:
+								copy[i][j] = 0
+						}
+					}
+				}
+			}
+			return copy.slice(0);
+		}
+		
+		function drawBoard(board) {
+			$("tr").each(function(i) {
+				$(this).children().each(function(j) {
+					b = board[i][j] == 1
+					$(this).removeClass(b ? "white" : "black").addClass(b ? "black" : "white")
+				})
+			})
+		}
+		
+		function marker() {
+			var b = $("#marker").text() == "Eraser"
+			erase = b
+			$("#marker").removeClass(b ? "btn-danger" : "btn-primary").addClass(b ? "btn-primary" : "btn-danger").text(b ? "Marker" : "Eraser").blur()
+		}
+	</script>
+{% endblock %}
+{% block content %}
+	<div class="jumbotron">
+		<div id="container" class="container">
+			<div class="text-center">
+				<table></table> 
+				<button id="start" type="button" class="btn btn-success" onclick="start()">Start</button>
+				<button id="marker" type="button" class="btn btn-primary" onclick="marker()">Marker</button>
+			</div>
+		</div>
+	</div>
+{% endblock %}
